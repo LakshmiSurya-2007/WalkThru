@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="WalkThru transforms resumes into interactive 2D adventures." />
+  <title>WalkThru | Your Resume, Reimagined</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js" defer></script>
+  <script src="avatar-art.js" defer></script>
+  <script src="resume-parser.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="WalkThru home"><span class="group-logo" data-avatar-logo aria-hidden="true"></span>Walk<span>Thru</span></a>
+    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#about">About</a></nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="eyebrow"><span class="status-dot"></span> YOUR NEXT RESUME ADVENTURE</div>
+      <h1 id="hero-title" class="floating-title"><span class="hero-group-logo" data-avatar-logo aria-hidden="true"></span>Walk<span>Thru</span><span class="sparkle" aria-hidden="true">✦</span></h1>
+      <h2>Don't just read a resume.<br /><em>Explore the story behind it.</em></h2>
+      <p class="hero-copy">Turn traditional resumes into an interactive 2D adventure. Discover skills, experience, and achievements one step at a time.</p>
+      <div class="hero-art" id="hero-art">
+        <img src="assets/walkthru-adventure.png" alt="WalkThru adventure world: a cartoon character explores education, experience, skills, projects, and certifications along a colorful path to a career goal" loading="eager" />
+      </div>
+      <div class="action-panel">
+        <input type="file" id="resume-file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+        <button type="button" class="btn btn-primary" id="upload-button"><span aria-hidden="true">↑</span> Upload Static Resume</button>
+        <button type="button" class="btn btn-secondary" id="avatar-button"><span aria-hidden="true">✧</span> Choose an Avatar <span aria-hidden="true">→</span></button>
+        <p class="upload-hint">PDF or DOCX · Maximum 10 MB · Processed locally</p>
+        <div class="upload-status" id="upload-status" role="status" aria-live="polite"></div>
+      </div>
+</section>
+    <section class="info-section" id="how-it-works"><div class="section-heading"><span class="section-kicker">THREE SIMPLE STEPS</span><h2>How your adventure begins</h2></div><div class="steps"><article class="step"><span class="step-number">01</span><h3>Upload</h3><p>Choose a PDF or DOCX resume from your device.</p></article><article class="step"><span class="step-number">02</span><h3>Choose</h3><p>Pick a friendly character to guide your journey.</p></article><article class="step"><span class="step-number">03</span><h3>Explore</h3><p>Travel through resume milestones in a playful 2D world.</p></article></div></section>
+    <section class="about-section" id="about"><h2>Built for a better way to review</h2><p>WalkThru is designed for recruiters, students, and professionals who want to experience resumes beyond ordinary documents.</p></section>
+  </main>
+  <footer>© <span id="year"></span> WalkThru · Your Resume, Reimagined.</footer>
+</body>
+</html>

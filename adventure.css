@@ -1,0 +1,139 @@
+body.adventure-body{background:linear-gradient(145deg,#e5fff3,#fff5db 55%,#e7f4ff);min-height:100vh}.adventure-main{width:min(1190px,94%);margin:22px auto 75px}.adventure-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:12px 0 22px}.adventure-heading h1{font-family:Outfit,sans-serif;font-size:clamp(2rem,4vw,3.2rem);margin:9px 0;color:#193a56}.adventure-heading h1 span{color:#e38c42}.adventure-heading p{margin:0;color:#546e7e}.adventure-progress{width:220px;flex-shrink:0;font-weight:700;color:#255477}.progress-track{height:12px;background:#d6e5e5;border-radius:20px;margin-top:10px;overflow:hidden}.progress-track>div{height:100%;width:0;background:linear-gradient(90deg,#57cfae,#eeb05c);border-radius:20px;transition:width .5s}.game-shell{border:7px solid white;box-shadow:0 24px 65px #326b7730;border-radius:27px;background:#b7ecf1;overflow:hidden}.game-topbar{background:#fffdf5;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.92rem;font-weight:700;color:#325c73}.game-small-btn{border:1px solid #bddad7;border-radius:10px;background:#e6f8f0;color:#27596b;padding:8px 11px;cursor:pointer}#game-canvas{display:block;width:100%;height:auto;aspect-ratio:1100/510;background:#b7ecf1}.game-bottom{display:flex;justify-content:space-between;gap:12px;padding:15px;background:#fffdf5;flex-wrap:wrap}.game-buttons{display:flex;gap:10px;flex-wrap:wrap}.game-buttons button{border:0;border-radius:12px;padding:12px 17px;font:700 .95rem Outfit,sans-serif;background:#def4e8;color:#245e65;cursor:pointer;box-shadow:0 3px 0 #b5d9cd}.game-buttons button:hover:not(:disabled){background:#ffdc9d;transform:translateY(-1px)}.game-buttons button:disabled{opacity:.45;cursor:not-allowed}.game-buttons #finish-game{background:#f3ae67;color:#56351e}.checkpoint-panel{margin:22px 0 12px;padding:23px;display:flex;align-items:start;gap:20px;background:#fffefa;border:2px solid #d5e9df;border-radius:22px;box-shadow:0 10px 25px #3b637013;transition:box-shadow .3s,transform .3s}.checkpoint-panel.is-open{box-shadow:0 12px 34px #efab4a40;transform:translateY(-3px)}.checkpoint-icon{font-size:2.5rem;background:#fef0cf;padding:12px;border-radius:18px}.checkpoint-label{font-size:.77rem;letter-spacing:.15em;font-weight:800;color:#bc7837}.checkpoint-panel h2{font-family:Outfit,sans-serif;color:#244d68;margin:7px 0}.checkpoint-content{min-width:0;flex:1}#checkpoint-details{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;color:#395768;max-height:130px;overflow:auto;transition:max-height .35s}#checkpoint-details.collapsed{max-height:0;overflow:hidden}.game-help{font-size:.86rem;color:#527181;text-align:center;line-height:2;margin-top:15px}kbd{border:1px solid #c4d5d6;background:white;border-radius:5px;padding:2px 7px;font:700 .8rem monospace}.finish-overlay{position:fixed;inset:0;z-index:50;background:#142c3bba;display:grid;place-items:center;padding:20px}.finish-overlay[hidden]{display:none}.finish-card{width:min(490px,100%);padding:38px 26px;text-align:center;background:#fffdf5;border-radius:25px;box-shadow:0 25px 80px #0c273d55}.finish-confetti{font-size:2.6rem}.finish-card h2{font-family:Outfit,sans-serif;color:#24556a;font-size:2rem}.finish-card p{color:#526a76;line-height:1.6}.finish-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}@media(max-width:700px){.adventure-heading{align-items:start;flex-direction:column}.adventure-progress{width:100%}.game-topbar{font-size:.73rem;flex-wrap:wrap}.game-bottom{justify-content:center}.game-buttons button{padding:11px 13px;font-size:.8rem}.checkpoint-panel{padding:16px;gap:12px}.checkpoint-icon{font-size:1.7rem;padding:9px}.game-help{font-size:.78rem}}
+/* Phase 5: interactive map, collectibles, and motion preferences */
+.collect-counter{background:#fff1c7;color:#8a5729;padding:7px 12px;border-radius:99px}
+.mini-map-wrap{background:#f0fbf3;padding:13px 20px;border-top:1px solid #d8ebdf}
+.mini-map-heading{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;font-weight:700;color:#50766f;margin-bottom:10px}
+.mini-map{display:flex;gap:6px;align-items:center;overflow-x:auto;padding:4px 1px 10px;scrollbar-width:thin}
+.map-node{border:2px solid #b9d9ce;border-radius:50%;background:#fff;min-width:43px;width:43px;height:43px;font-size:20px;cursor:pointer;position:relative;transition:transform .2s,border-color .2s}
+.map-node:not(:last-child){margin-right:15px}
+.map-node:not(:last-child)::after{content:"";position:absolute;left:calc(100% + 3px);top:50%;width:14px;border-top:3px dotted #d6af73}
+.map-node.visited{background:#fff0c9;border-color:#f1c06e}
+.map-node.current{border-color:#35bba7;transform:translateY(-4px);box-shadow:0 5px 0 #b6e8d7}
+.map-node:focus-visible,.game-buttons button:focus-visible,.game-small-btn:focus-visible{outline:3px solid #e69c41;outline-offset:3px}
+.game-toast{min-height:0;text-align:center;color:#8a5729;font-weight:800;opacity:0;transform:translateY(-5px);transition:opacity .2s,transform .2s}
+.game-toast.visible{padding-top:12px;opacity:1;transform:translateY(0)}
+@media(max-width:700px){.collect-counter{padding:5px 8px}.mini-map-heading{font-size:.72rem}}
+@media(prefers-reduced-motion:reduce){.map-node,.game-toast,.checkpoint-panel{transition:none!important}}
+
+/* Phase 6: popup belongs to the game world; avatar is a live SVG for real blinking. */
+.game-stage{position:relative;isolation:isolate;overflow:hidden}
+.stage-avatar{position:absolute;width:8.2%;aspect-ratio:140/160;left:11%;top:38%;transform:translate(-50%,-50%);z-index:4;pointer-events:none;transition:left .6s cubic-bezier(.2,.7,.2,1),top .6s cubic-bezier(.2,.7,.2,1)}
+.stage-avatar svg{width:100%;height:100%;filter:drop-shadow(0 7px 4px #295b5950)}
+.stage-avatar .blink{transform-box:fill-box;transform-origin:center;animation:stage-eye-blink 4.2s infinite}
+.stage-avatar .blink-right{animation-delay:.06s}
+@keyframes stage-eye-blink{0%,42%,46%,100%{transform:scaleY(1)}44%{transform:scaleY(.04)}}
+.stage-avatar.walking svg{animation:stage-step .19s ease-in-out infinite alternate}
+@keyframes stage-step{to{transform:translateY(-7px) rotate(3deg)}}
+.stage-popup{position:absolute;z-index:5;left:21%;top:12%;width:min(56%,590px);max-height:67%;display:flex;flex-direction:column;background:#fffef5f5;border:3px solid #f2b86c;border-radius:19px;box-shadow:0 14px 30px #254d5960;overflow:hidden;animation:pop-open .26s ease-out}
+.stage-popup[hidden]{display:none}
+@keyframes pop-open{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.popup-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 15px;background:#ffedc9;font:800 clamp(.8rem,1.5vw,1.1rem) Outfit,sans-serif;color:#315774}
+.popup-top button{font-size:1.5rem;border:0;background:transparent;color:#7b5236;cursor:pointer}
+.popup-body{padding:13px 16px;white-space:pre-wrap;overflow:auto;overflow-wrap:anywhere;font-size:clamp(.73rem,1.22vw,.98rem);line-height:1.6;color:#38556b}
+@media(max-width:650px){.stage-avatar{width:13%}.stage-popup{left:26%;width:71%;top:8%;max-height:78%;border-width:2px}.popup-top{padding:5px 9px}.popup-body{padding:6px 9px;font-size:.67rem;line-height:1.35}}
+@media(prefers-reduced-motion:reduce){.stage-avatar,.stage-avatar .blink,.stage-avatar.walking svg,.stage-popup{animation:none!important;transition:none!important}}
+
+/* All checkpoint content now appears inside the game world. */
+#checkpoint-panel{display:none!important}
+
+/* Phase 7 game usability */
+.game-stage{outline-offset:3px}
+.stage-avatar{z-index:9!important;width:12%!important;min-width:70px;max-width:135px;pointer-events:none;filter:drop-shadow(0 10px 5px #174e6b45)}
+.stage-avatar svg{display:block;width:100%;height:100%}
+.stage-popup{z-index:10!important;max-height:78%!important;min-height:130px}
+.popup-body{font-size:clamp(12px,1.45vw,17px)!important;line-height:1.6!important;white-space:normal!important}
+.resume-lines{display:grid;gap:7px}
+.resume-line{margin:0;padding:8px 10px;border-radius:8px;background:#f3f8f4;color:#304d60}
+.resume-line strong{color:#a46329}
+.mini-map{overflow-x:auto!important;overscroll-behavior-x:contain;scroll-behavior:smooth;scrollbar-width:auto}
+.map-node{flex:0 0 43px}
+@media(max-width:650px){.stage-avatar{width:16%!important;min-width:44px}.stage-popup{left:24%!important;width:74%!important;top:4%!important;max-height:90%!important}.popup-body{font-size:11px!important;line-height:1.35!important}.resume-line{padding:4px 5px}}
+
+/* Avatar above the in-world information card */
+.stage-avatar{z-index:12!important;width:12%!important;max-width:110px;min-width:60px;transform:translate(-50%,-50%)!important}
+.stage-popup{z-index:11!important;max-height:62%!important}
+@media(max-width:650px){.stage-avatar{width:15%!important;min-width:43px}.stage-popup{max-height:67%!important}}
+
+/* Phase 9: legible, structured in-world resume cards */
+.stage-popup{background:#fffef9!important;border-color:#edb56a!important;box-shadow:0 16px 42px #163f5259!important}
+.popup-top{font-size:clamp(14px,1.7vw,20px)!important;padding:12px 17px!important}
+.popup-body{padding:16px 18px!important;overscroll-behavior:contain;scrollbar-color:#d4b687 #fff7e8}
+.resume-rich{display:flex;flex-direction:column;gap:12px;font-family:'DM Sans',sans-serif}
+.resume-entry{background:#fff;border:1px solid #e0ebe8;border-left:4px solid #66bfae;border-radius:12px;padding:12px 14px;box-shadow:0 3px 10px #244b5b0b}
+.resume-entry-title{font:800 clamp(14px,1.5vw,18px) Outfit,sans-serif;color:#234f6b;margin:0 0 7px;line-height:1.35}
+.resume-paragraph{margin:5px 0 8px!important;font-size:clamp(13px,1.25vw,16px);line-height:1.65;color:#3e5967;overflow-wrap:anywhere}
+.resume-date{display:inline-block;color:#986328;background:#fff0d4;border-radius:8px;padding:4px 9px;font-size:12px;font-weight:800;margin:3px 0 8px}
+.resume-bullets{margin:7px 0 0;padding-left:21px;display:grid;gap:7px;color:#3e5967;line-height:1.55}
+.resume-bullets li::marker{color:#d18b41}
+.resume-fact{display:grid;grid-template-columns:minmax(80px,32%) 1fr;gap:10px;align-items:start;background:#f2f8f4;border-radius:11px;padding:10px 12px;overflow-wrap:anywhere}
+.resume-fact-label{font-size:12px;letter-spacing:.02em;text-transform:capitalize;font-weight:800;color:#387e76}
+.resume-fact-value{font-size:14px;color:#304f60}
+.resume-chip{padding:10px 12px;background:#f2f8f4;border-left:3px solid #64bdac;border-radius:9px;font-size:14px;line-height:1.55;color:#304f60;overflow-wrap:anywhere}
+@media(max-width:650px){.popup-top{padding:6px 10px!important;font-size:12px!important}.popup-body{padding:7px 8px!important}.resume-rich{gap:6px}.resume-entry{padding:7px 8px}.resume-entry-title{font-size:12px}.resume-paragraph,.resume-chip,.resume-fact-value{font-size:11px;line-height:1.4}.resume-fact{grid-template-columns:1fr;gap:2px;padding:6px}.resume-fact-label{font-size:10px}.resume-date{font-size:10px}}
+
+/* Phase 10: Avatar is part of the popup, directly above the card, never left of it. */
+.game-stage .stage-popup{
+  position:absolute!important;left:16%!important;top:23%!important;width:68%!important;
+  height:auto!important;max-height:74%!important;min-height:0!important;
+  display:flex;flex-direction:column;overflow:visible!important;
+  border-radius:20px!important;animation:pop-open .25s ease-out;
+}
+.game-stage .stage-popup[hidden]{display:none!important}
+.game-stage .stage-popup>.stage-avatar{
+  position:absolute!important;top:-86px!important;left:50%!important;
+  transform:translateX(-50%)!important;width:90px!important;height:90px!important;
+  min-width:0!important;max-width:none!important;z-index:30!important;
+  display:flex;justify-content:center;align-items:center;pointer-events:none;
+  background:#fffdf3;border:3px solid #efba74;border-radius:50%;
+  box-shadow:0 7px 18px #19485d33;overflow:visible;
+}
+.game-stage .stage-popup>.stage-avatar svg{width:78px!important;height:82px!important;display:block}
+.game-stage .stage-popup .popup-top{border-radius:16px 16px 0 0;flex:none}
+.game-stage .stage-popup .popup-body{overflow:auto!important;min-height:0!important;max-height:290px!important}
+.resume-readable{display:flex;flex-direction:column;gap:9px;font-family:'DM Sans',sans-serif}
+.readable-item,.readable-card{padding:12px 15px;background:#f3f9f5;border-radius:11px;border:1px solid #dcece4}
+.readable-item.fact{display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px}
+.readable-label{color:#2c7771;font-size:12px;font-weight:800}
+.readable-value{color:#344f60;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.readable-card{background:#fffdf8;border-left:4px solid #5ebaa9}
+.readable-entry-title{font:800 16px/1.4 Outfit,sans-serif;color:#24526d;margin:0 0 7px}
+.readable-description{font:400 14px/1.65 'DM Sans',sans-serif;color:#405d6b;margin:5px 0}
+.readable-date{display:inline-block;padding:4px 9px;border-radius:8px;background:#fff0d5;color:#96601c;font-size:12px;font-weight:700;margin:5px 0}
+.readable-chips{display:flex;flex-wrap:wrap;gap:8px}
+.readable-chip{padding:8px 12px;border-radius:99px;background:#e9f7ee;border:1px solid #c9e8d7;color:#326676;font-size:13px}
+.readable-summary{font-size:15px;line-height:1.75;color:#35566b;margin:0}
+@media(max-width:650px){
+.game-stage .stage-popup{left:6%!important;top:25%!important;width:88%!important;max-height:70%!important}
+.game-stage .stage-popup>.stage-avatar{width:57px!important;height:57px!important;top:-55px!important}
+.game-stage .stage-popup>.stage-avatar svg{width:52px!important;height:54px!important}
+.game-stage .stage-popup .popup-body{max-height:200px!important}
+.readable-item,.readable-card{padding:6px 8px}
+.readable-item.fact{grid-template-columns:1fr;gap:3px}
+.readable-entry-title{font-size:12px}.readable-value,.readable-description,.readable-summary{font-size:11px;line-height:1.45}
+.readable-chip{font-size:10px;padding:5px 8px}
+}
+
+/* Phase 11: avatar lives independently from the popup and transitions between positions. */
+.game-stage>.stage-avatar{
+  display:flex!important;align-items:center;justify-content:center;
+  position:absolute!important;z-index:30!important;
+  width:90px!important;height:90px!important;min-width:0!important;max-width:none!important;
+  left:var(--checkpoint-x,13%)!important;top:var(--checkpoint-y,55%)!important;
+  transform:translate(-50%,-50%)!important;
+  background:transparent;border:0;border-radius:50%;
+  transition:left .52s cubic-bezier(.22,.7,.22,1),top .52s cubic-bezier(.22,.7,.22,1),
+             background .3s,box-shadow .3s!important;
+  pointer-events:none;
+}
+.game-stage>.stage-avatar.at-popup{
+  left:50%!important;top:calc(23% - 12px)!important;
+  background:#fffdf3;border:3px solid #efba74;
+  box-shadow:0 7px 18px #19485d33;
+}
+.game-stage>.stage-avatar svg{width:78px!important;height:82px!important}
+@media(max-width:650px){
+ .game-stage>.stage-avatar{width:57px!important;height:57px!important}
+ .game-stage>.stage-avatar svg{width:52px!important;height:54px!important}
+ .game-stage>.stage-avatar.at-popup{top:calc(25% - 8px)!important}
+}
+@media(prefers-reduced-motion:reduce){.game-stage>.stage-avatar{transition:none!important}}
